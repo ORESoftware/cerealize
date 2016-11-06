@@ -3,54 +3,30 @@
  */
 
 
-function outerOuter () {
+const v = module.exports = function (fn, dataObj) {
 
-  return (function outer (foo, bar, baz) {     // foo, bar, and baz are injected JSON strings
+  const keys = Object.keys(dataObj);
 
-    return function yourSerializedFunction () {
-
-      //foo, bar, and baz are available here, but you need to call JSON.parse on them
-
-    }
-
-  })(
-    '{"foo":"is-serialized"}',
-    '{"bar":"is-serialized"}',
-    '{"baz":"is-serialized"}'
-  );
-
-}
-
-console.log(outerOuter.toString());
-
-const v = module.exports = function (dataInArrayForm, fn) {
-
-  const newDate = dataInArrayForm.map(d => JSON.stringify(d));
-
-  const prelim = [
-    '(function container(d,e,f){',
-    '  \n\n return ',
+  var prelim = [
+    '(function container(' + keys.join(',') + '){',
+    '\n',
+    '\treturn ',
     fn.toString(),
     '\n })(' ];
 
-  newDate.forEach(function (d, i) {
-    if (i > 0) {
-      prelim.push(',' + d);
-    }
-    else {
-      prelim.push(d);
-    }
 
-  });
+
+  prelim = prelim.concat(keys.map(function(k){
+     return JSON.stringify(dataObj[ k ]);
+  }).join(','));
+
 
   prelim.push(')');
+  const ret = prelim.join('');
 
-  return prelim.join('');
+  fn.toJSON = function(){
+     return ret;
+  };
 
+  return fn;
 };
-
-console.log(eval(v([ 1, 2, 3 ], function () {
-
-  console.log(d * 2, e, f);
-
-}))());
