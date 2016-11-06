@@ -3,7 +3,7 @@
  */
 
 
-const cerialize = require('.');
+const cerialize = require('..');
 
 function Foo (a, b, c) {
 
@@ -25,9 +25,7 @@ function Foo (a, b, c) {
 
 
 const cerializedFn = Foo(3,4,5);
-
-// console.log(eval(cerializedFn)(0));
-
-
+console.log(cerializedFn(10)); //600
+console.log(eval(cerializedFn.toJSON())(40));
 console.log(JSON.stringify(cerializedFn));
 

@@ -1,9 +1,5 @@
-/**
- * Created by Olegzandr on 11/6/16.
- */
 
-
-const v = module.exports = function (fn, dataObj) {
+module.exports = function (fn, dataObj) {
 
   const keys = Object.keys(dataObj);
 
@@ -13,8 +9,6 @@ const v = module.exports = function (fn, dataObj) {
     '\treturn ',
     fn.toString(),
     '\n })(' ];
-
-
 
   prelim = prelim.concat(keys.map(function(k){
      return JSON.stringify(dataObj[ k ]);
